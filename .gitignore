@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+env/
+
+# Secrets
+.env
+*.env
+
+# Generated outputs
+output/
+*.wav
+*.mp3
+*.mp4
+
+# Model weights
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+
+# ComfyUI
+visual-pipeline/ComfyUI/
+visual-pipeline/ComfyUI/models/
+visual-pipeline/ComfyUI/output/
+visual-pipeline/ComfyUI/input/
+visual-pipeline/ComfyUI/temp/
+
+# Cache
+.cache/
+*.log
+
+# IDE
+.vscode/
+.idea/
+

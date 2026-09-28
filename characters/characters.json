@@ -1,0 +1,41 @@
+{
+    "C001": {
+        "name": "Rahul",
+        "gender": "male",
+        "voice_id": "VC001",
+        "reference": "voices/male/male_clean.wav",
+        "visual": {
+            "description": "21-year-old Indian male, medium skin tone, short black hair, dark brown eyes, clean-shaven face, wearing a dark blue hoodie, black jeans and white sneakers",
+            "reference_image": "characters/visual/rahul.png"
+        }
+    },
+
+    "C002": {
+        "name": "Priya",
+        "gender": "female",
+        "voice_id": "VC002",
+        "reference": "voices/female/female_converted.wav",
+        "visual": {
+            "description": "21-year-old Indian female, medium skin tone, long straight black hair, dark brown eyes, wearing a maroon jacket, black jeans and white sneakers",
+            "reference_image": "characters/visual/priya.png"
+        }
+    },
+
+    "C003": {
+        "name": "Amit",
+        "gender": "male",
+        "voice_id": "VC003",
+        "reference": "voices/male/amit_clean.wav",
+        "visual": {
+            "description": "22-year-old Indian male, medium skin tone, short slightly messy black hair, dark brown eyes, light beard, wearing a grey jacket, dark jeans and black shoes",
+            "reference_image": "characters/visual/amit.png"
+        }
+    },
+
+    "N001": {
+        "name": "Narrator",
+        "type": "narrator",
+        "voice_id": "VN001",
+        "reference": "voices/narrator/narrator.wav"
+    }
+}
