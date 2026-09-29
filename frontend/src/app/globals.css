@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8fbff;
+  --foreground: #0b1220;
+  --muted: #5b6475;
+  --ice: #eaf4ff;
+  --soft-blue: #cfe5ff;
+  --sky: #8cc8ff;
+  --blue: #3b82f6;
+  --electric: #2563eb;
+  --deep: #174ea6;
+  --cyan: #38bdf8;
+  --border: rgba(23, 78, 166, 0.1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-ice: var(--ice);
+  --color-soft-blue: var(--soft-blue);
+  --color-sky: var(--sky);
+  --color-blue: var(--blue);
+  --color-electric: var(--electric);
+  --color-deep: var(--deep);
+  --color-cyan: var(--cyan);
+  --font-display: var(--font-sora);
+  --font-sans: var(--font-inter);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--electric);
+  color: white;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+.text-blue-gradient {
+  background: linear-gradient(100deg, var(--deep) 0%, var(--electric) 45%, var(--cyan) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Static fallback atmosphere: always painted under the WebGL layers, and the
+   only thing visible when WebGL is unavailable. */
+.atmosphere-fallback {
+  background:
+    radial-gradient(60% 45% at 18% 38%, rgba(140, 200, 255, 0.45), transparent 70%),
+    radial-gradient(55% 40% at 82% 72%, rgba(56, 189, 248, 0.28), transparent 70%),
+    radial-gradient(70% 50% at 50% 100%, rgba(207, 229, 255, 0.7), transparent 70%),
+    var(--background);
+}
+
+.atmo-listening,
+.atmo-generating {
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+
+html[data-atmosphere="listening"] .atmo-listening,
+html[data-atmosphere="generating"] .atmo-generating {
+  opacity: 1;
+}
+
+html[data-atmosphere="generating"] .atmo-generating {
+  animation: atmo-breathe 3.2s ease-in-out infinite;
+}
+
+@keyframes atmo-breathe {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .custom-cursor-active,
+  .custom-cursor-active a,
+  .custom-cursor-active button,
+  .custom-cursor-active textarea {
+    cursor: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
