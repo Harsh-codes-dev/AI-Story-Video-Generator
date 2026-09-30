@@ -39,3 +39,11 @@ export function generateStory(prompt) {
 export function getJobStatus(jobId) {
   return request(`/api/generate/${encodeURIComponent(jobId)}`);
 }
+
+/**
+ * POST /api/enhance  { prompt } → { enhanced }
+ * Server-side route calls Gemini; the API key never reaches the client.
+ */
+export function enhancePrompt(prompt) {
+  return request("/api/enhance", { method: "POST", body: JSON.stringify({ prompt }) });
+}

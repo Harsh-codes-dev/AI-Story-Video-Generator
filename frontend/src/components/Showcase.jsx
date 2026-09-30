@@ -89,18 +89,13 @@ export default function Showcase() {
   return (
     <section id="showcase" className="relative px-6 py-32 sm:py-40">
       <div className="mx-auto max-w-6xl">
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <div>
-            <span className="text-[11px] font-medium uppercase tracking-[0.3em] text-electric">04 — Watch</span>
-            <BlurText
-              as="h2"
-              text="Worlds already imagined."
-              delay={90}
-              className="font-display mt-4 text-4xl font-semibold tracking-[-0.03em] sm:text-6xl"
-            />
-          </div>
-          <p className="max-w-sm text-muted">Example stories — each began as a single sentence.</p>
-        </div>
+        <span className="text-[11px] font-medium uppercase tracking-[0.3em] text-electric">Watch</span>
+        <BlurText
+          as="h2"
+          text="Worlds already imagined."
+          delay={90}
+          className="font-display mt-4 text-4xl font-semibold tracking-[-0.03em] sm:text-6xl"
+        />
 
         <div className="mt-16 grid gap-6 md:grid-cols-3">
           {STORIES.map((story, i) => (

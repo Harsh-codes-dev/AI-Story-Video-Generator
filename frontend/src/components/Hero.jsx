@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowRight, Sparkles } from "lucide-react";
 import AnimatedHeadline from "./AnimatedHeadline";
@@ -24,7 +25,7 @@ export default function Hero() {
     <section
       id="hero"
       ref={ref}
-      className="relative flex min-h-screen flex-col justify-center overflow-hidden px-6 pb-12 pt-24 sm:px-10"
+      className="relative flex min-h-screen flex-col justify-center overflow-hidden px-8 pb-12 pt-24 sm:px-14 lg:px-24"
     >
       <div className="mx-auto grid w-full max-w-[1440px] items-center gap-10 lg:grid-cols-12">
         <motion.div style={{ opacity, y, filter: blur }} className="order-2 lg:order-1 lg:col-span-6">
@@ -56,19 +57,19 @@ export default function Hero() {
             className="mt-7 flex flex-wrap items-center gap-5"
           >
             <Magnet padding={60} magnetStrength={5}>
-              <a
-                href="#create"
+              <Link
+                href="/create"
                 data-cursor="Create"
                 className="group relative flex items-center gap-3 overflow-hidden rounded-full bg-foreground py-4 pl-7 pr-6 text-sm font-medium text-white shadow-[0_12px_32px_-10px_rgba(37,99,235,0.6)] transition-transform duration-300 hover:scale-[1.03]"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-deep via-electric to-cyan opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                 <span className="relative">Create Your Story</span>
                 <ArrowRight size={16} className="relative transition-transform duration-300 group-hover:translate-x-1" />
-              </a>
+              </Link>
             </Magnet>
-            <a href="#how-it-works" className="text-sm font-medium text-muted underline-offset-4 transition-colors hover:text-foreground hover:underline">
+            <Link href="/how-it-works" className="text-sm font-medium text-muted underline-offset-4 transition-colors hover:text-foreground hover:underline">
               See how it works
-            </a>
+            </Link>
           </motion.div>
         </motion.div>
 

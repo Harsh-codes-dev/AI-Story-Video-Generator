@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 export default function ScrollIndicator({ delay = 2 }) {
   return (
     <motion.a
-      href="#create"
+      href="/create"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.9 }}

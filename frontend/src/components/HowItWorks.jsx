@@ -25,7 +25,7 @@ export default function HowItWorks() {
       <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <div className="lg:sticky lg:top-36">
-            <span className="text-[11px] font-medium uppercase tracking-[0.3em] text-electric">03 — Create</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.3em] text-electric">Create</span>
             <BlurText
               as="h2"
               text="From words to worlds."
