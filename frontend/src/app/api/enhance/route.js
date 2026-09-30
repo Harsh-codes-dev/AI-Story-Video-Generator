@@ -31,15 +31,24 @@ export async function POST(request) {
               parts: [
                 {
                   text:
-                    "Rewrite the following story idea into a more vivid, evocative story prompt. " +
-                    "Keep the same core idea and length in the same ballpark (a few sentences at most). " +
-                    "Reply with only the rewritten prompt — no preamble, no quotes, no explanation.\n\n" +
-                    `Story idea: ${prompt.trim()}`,
+                    "Assume yourself as a professional story writer. A user has given you a short story idea. " +
+                    "Your job is only to make it read better — stronger word choice, more sensory detail, smoother " +
+                    "phrasing. Do not change what actually happens: keep the same characters, setting, actions, " +
+                    "and outcome. Do not invent new characters, emotions, backstory, or plot details that are not " +
+                    "implied by the original text. Do not change the meaning or tone of the idea.\n\n" +
+                    "Write the result as one or two complete sentences (never cut off mid-sentence), roughly the " +
+                    "same length as the original. Reply with only the rewritten prompt — no preamble, no quotes, " +
+                    "no labels, no explanation.\n\n" +
+                    `Original idea: ${prompt.trim()}`,
                 },
               ],
             },
           ],
-          generationConfig: { temperature: 0.9, maxOutputTokens: 300 },
+          generationConfig: {
+            temperature: 0.6,
+            maxOutputTokens: 400,
+            thinkingConfig: { thinkingBudget: 0 },
+          },
         }),
       }
     );
@@ -53,10 +62,16 @@ export async function POST(request) {
       );
     }
 
-    const enhanced = data?.candidates?.[0]?.content?.parts?.map((p) => p.text).join("").trim();
+    const candidate = data?.candidates?.[0];
+    const enhanced = candidate?.content?.parts?.map((p) => p.text).join("").trim();
 
     if (!enhanced) {
-      return Response.json({ error: "No enhancement came back — try again." }, { status: 502 });
+      return Response.json({ error: "No enhancement came back. Try again." }, { status: 502 });
+    }
+
+    // Never hand back a sentence that was cut off partway through.
+    if (candidate.finishReason === "MAX_TOKENS") {
+      return Response.json({ error: "The enhancement ran out of room. Try again." }, { status: 502 });
     }
 
     return Response.json({ enhanced });

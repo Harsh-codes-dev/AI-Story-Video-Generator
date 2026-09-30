@@ -1,7 +1,7 @@
 import HowItWorks from "@/components/HowItWorks";
 
 export const metadata = {
-  title: "How It Works — AI Video Generator",
+  title: "How It Works",
 };
 
 export default function HowItWorksPage() {

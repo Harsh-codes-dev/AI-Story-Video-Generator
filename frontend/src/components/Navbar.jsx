@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, Menu, X } from "lucide-react";
+import Logo from "./Logo";
 
 // `id` links are sections on the homepage itself and use scroll-spy;
 // plain page links are active purely based on the current route.
@@ -62,19 +63,19 @@ export default function Navbar() {
           scrolled ? "glass shadow-[0_8px_30px_-12px_rgba(23,78,166,0.25)]" : "border border-transparent"
         }`}
       >
-        <Link href="/" className="font-display text-sm font-bold tracking-[0.28em] text-foreground">
-          AI Video Generator
+        <Link href="/" aria-label="AI Video Generator home">
+          <Logo />
         </Link>
 
         {/* Centered on the bar itself (not the remaining flex space), so an
             unequal-width logo on the left doesn't pull it off-center. */}
-        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-2 md:flex">
           {LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`relative rounded-full px-4 py-2 text-sm transition-colors duration-300 ${
-                isActive(link) ? "text-foreground" : "text-muted hover:text-foreground"
+              className={`relative rounded-full px-4 py-2 text-base font-medium transition-colors duration-300 ${
+                isActive(link) ? "text-foreground" : "text-foreground/60 hover:text-foreground"
               }`}
             >
               {link.label}

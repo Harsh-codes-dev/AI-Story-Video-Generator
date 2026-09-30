@@ -7,7 +7,7 @@ import SpotlightCard from "./reactbits/SpotlightCard";
 import BlurText from "./reactbits/BlurText";
 
 const STEPS = [
-  { icon: PenLine, title: "Story", body: "Write your idea — a sentence or a full script." },
+  { icon: PenLine, title: "Story", body: "Write your idea in a sentence or a full script." },
   { icon: Users, title: "Characters", body: "AI understands who is in your story, how they look and how they sound." },
   { icon: Mountain, title: "Scenes", body: "AI builds the world: locations, objects, lighting and timeline." },
   { icon: AudioWaveform, title: "Voices", body: "Every character receives a consistent voice across scenes." },
@@ -33,8 +33,8 @@ export default function HowItWorks() {
               className="font-display mt-4 text-4xl font-semibold tracking-[-0.03em] sm:text-6xl"
             />
             <p className="mt-6 max-w-sm text-muted">
-              One prompt goes in. Behind the scenes, the AI reads your story the way a director would —
-              then builds it, scene by scene.
+              One prompt goes in. Behind the scenes, the AI reads your story the way a director would,
+              then builds it scene by scene.
             </p>
           </div>
         </div>

@@ -70,8 +70,8 @@ export default function Footer() {
               className="text-blue-gradient font-display text-4xl font-bold tracking-[-0.03em] sm:text-5xl"
             />
             <p className="mt-6 max-w-md leading-relaxed text-muted">
-              Turn a simple idea into a living, breathing world — with characters, scenes,
-              voices, and motion. All in one place, powered by AI.
+              Turn a simple idea into a living, breathing world with characters, scenes,
+              voices, and motion, all in one place, powered by AI.
             </p>
             <Link
               href="/create"

@@ -21,7 +21,7 @@ const STORIES = [
   {
     title: "The Clockmaker",
     genre: "Adventure",
-    body: "An old inventor builds a machine that can stop time — and forgets how to start it.",
+    body: "An old inventor builds a machine that can stop time, then forgets how to start it again.",
     Art: ClockmakerArt,
   },
 ];

@@ -91,7 +91,7 @@ export default function StoryInput() {
   }
 
   return (
-    <section id="create" className="relative px-6 py-32 sm:py-40">
+    <section id="create" className="relative px-6 pb-32 pt-28 sm:pb-40 sm:pt-32">
       <div className="mx-auto max-w-3xl text-center">
         <span className="text-[11px] font-medium uppercase tracking-[0.3em] text-electric">Describe</span>
         <BlurText

@@ -1,7 +1,7 @@
 import StoryInput from "@/components/StoryInput";
 
 export const metadata = {
-  title: "Create — AI Video Generator",
+  title: "Create",
 };
 
 export default function CreatePage() {
