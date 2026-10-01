@@ -2,7 +2,47 @@
 // key lives in an env var without the NEXT_PUBLIC_ prefix, so it never
 // reaches the browser — the client only ever talks to this route.
 
-const MODEL = "gemini-3.8-flash";
+// A lighter, more available model: the newest flagship (3.8-flash) is under
+// heavy public load right now and frequently returns 503 "high demand" for
+// this simple rewrite task, which doesn't need its extra capability anyway.
+const MODEL = "gemini-3.1-flash-lite";
+const MAX_ATTEMPTS = 3;
+
+function buildPrompt(prompt) {
+  return (
+    "Assume yourself as a professional story writer. A user has given you a short story idea. " +
+    "Your job is only to make it read better — stronger word choice, more sensory detail, smoother " +
+    "phrasing. Do not change what actually happens: keep the same characters, setting, actions, " +
+    "and outcome. Do not invent new characters, emotions, backstory, or plot details that are not " +
+    "implied by the original text. Do not change the meaning or tone of the idea.\n\n" +
+    "Write the result as one or two complete sentences (never cut off mid-sentence), roughly the " +
+    "same length as the original. Reply with only the rewritten prompt — no preamble, no quotes, " +
+    "no labels, no explanation.\n\n" +
+    `Original idea: ${prompt.trim()}`
+  );
+}
+
+async function callGemini(prompt, apiKey) {
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: buildPrompt(prompt) }] }],
+      generationConfig: {
+        temperature: 0.6,
+        maxOutputTokens: 400,
+        thinkingConfig: { thinkingBudget: 0 },
+      },
+    }),
+  });
+
+  const data = await res.json();
+  return { ok: res.ok, status: res.status, data };
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 export async function POST(request) {
   const { prompt } = await request.json().catch(() => ({}));
@@ -16,66 +56,42 @@ export async function POST(request) {
     return Response.json({ error: "Enhancement isn't configured on the server." }, { status: 500 });
   }
 
-  try {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": apiKey,
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text:
-                    "Assume yourself as a professional story writer. A user has given you a short story idea. " +
-                    "Your job is only to make it read better — stronger word choice, more sensory detail, smoother " +
-                    "phrasing. Do not change what actually happens: keep the same characters, setting, actions, " +
-                    "and outcome. Do not invent new characters, emotions, backstory, or plot details that are not " +
-                    "implied by the original text. Do not change the meaning or tone of the idea.\n\n" +
-                    "Write the result as one or two complete sentences (never cut off mid-sentence), roughly the " +
-                    "same length as the original. Reply with only the rewritten prompt — no preamble, no quotes, " +
-                    "no labels, no explanation.\n\n" +
-                    `Original idea: ${prompt.trim()}`,
-                },
-              ],
-            },
-          ],
-          generationConfig: {
-            temperature: 0.6,
-            maxOutputTokens: 400,
-            thinkingConfig: { thinkingBudget: 0 },
-          },
-        }),
+  let lastError = { message: "The enhancement service returned an error.", status: 502 };
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      const { ok, status, data } = await callGemini(prompt, apiKey);
+
+      if (!ok) {
+        lastError = { message: data?.error?.message || lastError.message, status };
+        // Only retry on transient capacity errors; anything else (bad request,
+        // auth failure) will just fail the same way again.
+        if (status === 503 || status === 429) {
+          await sleep(attempt * 600);
+          continue;
+        }
+        break;
       }
-    );
 
-    const data = await res.json();
+      const candidate = data?.candidates?.[0];
+      const enhanced = candidate?.content?.parts?.map((p) => p.text).join("").trim();
 
-    if (!res.ok) {
-      return Response.json(
-        { error: data?.error?.message || "The enhancement service returned an error." },
-        { status: res.status }
-      );
+      if (!enhanced) {
+        lastError = { message: "No enhancement came back. Try again.", status: 502 };
+        continue;
+      }
+
+      // Never hand back a sentence that was cut off partway through.
+      if (candidate.finishReason === "MAX_TOKENS") {
+        lastError = { message: "The enhancement ran out of room. Try again.", status: 502 };
+        continue;
+      }
+
+      return Response.json({ enhanced });
+    } catch {
+      lastError = { message: "Couldn't reach the enhancement service.", status: 502 };
     }
-
-    const candidate = data?.candidates?.[0];
-    const enhanced = candidate?.content?.parts?.map((p) => p.text).join("").trim();
-
-    if (!enhanced) {
-      return Response.json({ error: "No enhancement came back. Try again." }, { status: 502 });
-    }
-
-    // Never hand back a sentence that was cut off partway through.
-    if (candidate.finishReason === "MAX_TOKENS") {
-      return Response.json({ error: "The enhancement ran out of room. Try again." }, { status: 502 });
-    }
-
-    return Response.json({ enhanced });
-  } catch {
-    return Response.json({ error: "Couldn't reach the enhancement service." }, { status: 502 });
   }
+
+  return Response.json({ error: lastError.message }, { status: lastError.status });
 }

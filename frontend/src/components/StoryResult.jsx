@@ -1,7 +1,16 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Play, RotateCcw } from "lucide-react";
+import { Download, Play, RotateCcw } from "lucide-react";
+
+function downloadFileName(prompt) {
+  const slug = prompt
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")
+    .slice(0, 50);
+  return `${slug || "story"}.mp4`;
+}
 
 export default function StoryResult({ job, prompt, onReset }) {
   return (
@@ -34,12 +43,33 @@ export default function StoryResult({ job, prompt, onReset }) {
           <span className="text-[11px] uppercase tracking-[0.22em] text-electric">World generated</span>
           <p className="mt-1 line-clamp-2 max-w-lg text-sm text-muted">“{prompt}”</p>
         </div>
-        <button
-          onClick={onReset}
-          className="flex items-center gap-2 self-start rounded-full border border-deep/15 px-4 py-2 text-sm text-foreground transition-colors hover:border-electric/40 hover:text-deep sm:self-auto"
-        >
-          <RotateCcw size={14} /> New story
-        </button>
+        <div className="flex flex-wrap items-center gap-3 self-start sm:self-auto">
+          {job.videoUrl ? (
+            <a
+              href={job.videoUrl}
+              download={downloadFileName(prompt)}
+              data-cursor="Download"
+              className="flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-deep"
+            >
+              <Download size={14} /> Download video
+            </a>
+          ) : (
+            <button
+              type="button"
+              disabled
+              title="Available once the AI pipeline generates a real video"
+              className="flex cursor-not-allowed items-center gap-2 rounded-full border border-deep/10 px-4 py-2 text-sm text-muted/60"
+            >
+              <Download size={14} /> Download video
+            </button>
+          )}
+          <button
+            onClick={onReset}
+            className="flex items-center gap-2 rounded-full border border-deep/15 px-4 py-2 text-sm text-foreground transition-colors hover:border-electric/40 hover:text-deep"
+          >
+            <RotateCcw size={14} /> New story
+          </button>
+        </div>
       </div>
     </motion.div>
   );
