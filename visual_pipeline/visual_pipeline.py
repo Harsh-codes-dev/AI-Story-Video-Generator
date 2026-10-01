@@ -42,7 +42,8 @@ pipe = FluxPipeline.from_pretrained(
     torch_dtype=torch.float16
 )
 
-pipe.enable_model_cpu_offload()
+# Use sequential offload for absolute minimum VRAM usage to prevent OOM
+pipe.enable_sequential_cpu_offload()
 
 print("FLUX loaded!")
 print()
@@ -104,8 +105,11 @@ cinematic lighting, detailed environment.
         width=768,
         num_inference_steps=4,
         guidance_scale=0.0,
-        max_sequence_length=256
+        max_sequence_length=77
     ).images[0]
+
+    # Free up GPU memory aggressively after each generation
+    torch.cuda.empty_cache()
 
     image.save(output_file)
 

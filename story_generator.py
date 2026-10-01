@@ -94,13 +94,15 @@ IMPORTANT CHARACTER RULES:
 10. Do not introduce unnamed characters.
 11. Generate scenes suitable for 3D image generation.
 12. Every scene MUST contain an image_prompt.
-13. The story should follow the duration requested by the user.
-14. For a 30-second story, keep the story short enough to fit
+13. The "image_prompt" MUST always be in ENGLISH, even if the story is in another language (e.g. Hindi).
+14. The "image_prompt" MUST be highly concise (under 25 words) to avoid token truncation.
+15. The story should follow the duration requested by the user.
+16. For a 30-second story, keep the story short enough to fit
     approximately 30 seconds of narration/dialogue.
-15. Return ONLY valid JSON.
-16. Do NOT return Markdown.
-17. Do NOT use ```json.
-18. Do NOT add explanations outside the JSON.
+17. Return ONLY valid JSON.
+18. Do NOT return Markdown.
+19. Do NOT use ```json.
+20. Do NOT add explanations outside the JSON.
 
 OUTPUT FORMAT:
 
