@@ -16,10 +16,9 @@ with open(STORY_FILE, "r", encoding="utf-8") as f:
     story = json.load(f)
 
 # -----------------------------
-# Load characters
+# Extract characters from story
 # -----------------------------
-with open(CHARACTER_FILE, "r", encoding="utf-8") as f:
-    characters = json.load(f)
+char_map = {c["character_id"]: c["name"] for c in story.get("characters", [])}
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -74,15 +73,8 @@ for scene in story["scenes"]:
     character_names = []
 
     for character_id in scene.get("characters", []):
-
-        if character_id in characters:
-
-            character = characters[character_id]
-
-            if character.get("type") == "narrator":
-                continue
-
-            character_names.append(character["name"])
+        if character_id in char_map:
+            character_names.append(char_map[character_id])
 
     character_list = ", ".join(character_names)
 
