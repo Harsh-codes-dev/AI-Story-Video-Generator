@@ -6,10 +6,18 @@ from TTS.api import TTS
 STORY_FILE = "output/story.json"
 OUTPUT_DIR = "output/audio"
 
-# XTTS-v2 Built-in Speakers
-MALE_VOICES = ["Craig Gutsy", "Damien Black", "Royston Shirle", "Andrew Chipper", "Badr Odhiambo"]
-FEMALE_VOICES = ["Ana Florence", "Claribel Dervla", "Daisy Studious", "Gracie Wise", "Tammie Ema"]
-NARRATOR_VOICE = "Tennen Ishikawa"
+print("\nLoading XTTS-v2...")
+tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to("cuda")
+print("XTTS-v2 loaded on GPU")
+
+# Get actual available speakers directly from the model
+available_speakers = getattr(tts, "speakers", [])
+if not available_speakers:
+    print("Warning: No speakers found in TTS model. Defaulting to blank.")
+    available_speakers = [""]
+
+# Shuffle so every video gets unique voices
+random.shuffle(available_speakers)
 
 # Load story
 with open(STORY_FILE, "r") as f:
@@ -18,30 +26,23 @@ with open(STORY_FILE, "r") as f:
 language = story.get("language", "en")
 print(f"Story language: {language}")
 
-# Assign random XTTS voices to the invented characters based on gender
-character_voices = {"N001": NARRATOR_VOICE}
-m_idx, f_idx = 0, 0
-random.shuffle(MALE_VOICES)
-random.shuffle(FEMALE_VOICES)
+# Assign random voices from the ACTUAL model speakers
+character_voices = {}
+
+# Assign Narrator (use the first available speaker)
+character_voices["N001"] = available_speakers[0]
+speaker_idx = 1
 
 for char in story.get("characters", []):
-    if char.get("gender", "male").lower() == "female":
-        character_voices[char["character_id"]] = FEMALE_VOICES[f_idx % len(FEMALE_VOICES)]
-        f_idx += 1
-    else:
-        character_voices[char["character_id"]] = MALE_VOICES[m_idx % len(MALE_VOICES)]
-        m_idx += 1
+    character_voices[char["character_id"]] = available_speakers[speaker_idx % len(available_speakers)]
+    speaker_idx += 1
 
 print("\nAssigned Voices:")
 for cid, voice in character_voices.items():
     print(f"  {cid}: {voice}")
 
-print("\nLoading XTTS-v2...")
-tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to("cuda")
-print("XTTS-v2 loaded on GPU")
-
 def generate_audio(character_id, text, output_file):
-    speaker = character_voices.get(character_id, MALE_VOICES[0])
+    speaker = character_voices.get(character_id, available_speakers[0])
     print(f"\nGenerating Audio -> ID: {character_id} | Voice: {speaker}")
     print(f"Text: {text}")
 
