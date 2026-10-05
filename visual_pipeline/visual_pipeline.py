@@ -79,14 +79,13 @@ for scene in story["scenes"]:
     character_list = ", ".join(character_names)
 
     # -----------------------------
-    # SHORT VISUAL PROMPT
+    # HIGH-FIDELITY VISUAL PROMPT
     # -----------------------------
     prompt = f"""
-3D animated cinematic scene.
+Cinematic Masterpiece, 8k resolution, photorealistic, highly detailed, stunning lighting.
 {scene.get("image_prompt", "")}
 Characters: {character_list}.
-Consistent character appearance, natural poses,
-cinematic lighting, detailed environment.
+Consistent character appearance, natural poses, dynamic angle, award-winning photography.
 """
 
     print("Characters:", character_list)
@@ -96,7 +95,7 @@ cinematic lighting, detailed environment.
         prompt,
         height=768,
         width=768,
-        num_inference_steps=4,
+        num_inference_steps=12,
         guidance_scale=0.0,
         max_sequence_length=77
     ).images[0]

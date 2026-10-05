@@ -34,6 +34,8 @@ IMPORTANT RULES:
 8. Do NOT return Markdown.
 9. Do NOT use ```json.
 10. Do NOT add explanations outside the JSON.
+11. The story MUST have a strong cinematic narrative arc with rich, engaging pacing.
+12. The "image_prompt" MUST explicitly include high-end rendering keywords like "Masterpiece, ultra-detailed 8k resolution, cinematic lighting, photorealistic".
 
 OUTPUT FORMAT:
 

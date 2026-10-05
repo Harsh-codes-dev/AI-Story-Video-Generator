@@ -56,10 +56,17 @@ def main():
         # SVD performs best with 1024x576 resolution
         image = image.resize((1024, 576)) 
         
-        # Generate video frames
+        # Generate video frames with higher quality parameters
         # decode_chunk_size=8 helps with VRAM usage on the DGX
         generator = torch.manual_seed(42)
-        frames = pipe(image, decode_chunk_size=8, generator=generator).frames[0]
+        frames = pipe(
+            image, 
+            decode_chunk_size=8, 
+            generator=generator,
+            num_inference_steps=40,    # Takes longer, but significantly higher quality/smoothness
+            motion_bucket_id=80,       # Lower than default (127) for less warping, clearer movement
+            noise_aug_strength=0.02    # Lower noise aug for sharper frames
+        ).frames[0]
         
         # Export to MP4 at 7 frames per second (approx ~3.5 seconds of video)
         export_to_video(frames, output_video_path, fps=7)
