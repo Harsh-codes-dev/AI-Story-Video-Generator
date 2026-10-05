@@ -21,6 +21,9 @@ def run_script(script_name, args=None):
         sys.exit(1)
 
 def main():
+    # If the user provided a prompt to main.py, pass it to story_generator.py
+    prompt_args = sys.argv[1:] if len(sys.argv) > 1 else None
+
     print("=" * 60)
     print("      AI STORY VIDEO GENERATOR - MASTER PIPELINE")
     print("=" * 60)
@@ -29,8 +32,7 @@ def main():
     os.environ["OPENROUTER_API_KEY"] = "YOUR_API_KEY_HERE"
         
     # 2. Step 1: Generate Story (JSON)
-    # This will ask the user for a prompt via input()
-    run_script("story_generator.py")
+    run_script("story_generator.py", args=prompt_args)
     
     # 3. Step 2: Generate Visuals (FLUX)
     run_script(os.path.join("visual_pipeline", "visual_pipeline.py"))
@@ -43,6 +45,9 @@ def main():
     
     # 5. Step 4: Combine Audio (FFmpeg)
     run_script("combine_audio.py")
+    
+    # 6. Step 5: Final Video Assembly (FFmpeg)
+    run_script("video_assembler.py")
     
     print("\n" + "=" * 60)
     print("🎉 FULL PIPELINE COMPLETED SUCCESSFULLY!")

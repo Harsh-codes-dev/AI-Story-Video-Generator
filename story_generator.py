@@ -305,10 +305,12 @@ if __name__ == "__main__":
 
         exit(1)
 
-    # Get user prompt
-    user_prompt = input(
-        "\nEnter your story prompt: "
-    ).strip()
+    import sys
+    # Get user prompt from arguments or ask for it
+    if len(sys.argv) > 1:
+        user_prompt = " ".join(sys.argv[1:]).strip()
+    else:
+        user_prompt = input("\nEnter your story prompt: ").strip()
 
     if not user_prompt:
 
