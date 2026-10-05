@@ -39,11 +39,12 @@ print("Loading FLUX...")
 
 pipe = FluxPipeline.from_pretrained(
     MODEL,
-    torch_dtype=torch.float16
+    torch_dtype=torch.float16,
+    device_map="balanced"
 )
 
-# Use sequential offload for absolute minimum VRAM usage to prevent OOM
-pipe.enable_sequential_cpu_offload()
+# device_map="balanced" automatically splits the model across your 4 GPUs
+# pipe.enable_sequential_cpu_offload()  <-- No longer needed, model is distributed
 
 print("FLUX loaded!")
 print()

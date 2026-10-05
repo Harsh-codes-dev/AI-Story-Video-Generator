@@ -30,10 +30,10 @@ def main():
     
     # Load the Stable Video Diffusion model
     pipe = StableVideoDiffusionPipeline.from_pretrained(
-        MODEL_ID, torch_dtype=torch.float16, variant="fp16"
+        MODEL_ID, torch_dtype=torch.float16, variant="fp16", device_map="balanced"
     )
     # Offload model to CPU when not used to save GPU memory
-    pipe.enable_model_cpu_offload()
+    # pipe.enable_model_cpu_offload() <-- No longer needed since we are distributing across 4 GPUs
     
     print("SVD Model Loaded! Generating animations...\n")
     
