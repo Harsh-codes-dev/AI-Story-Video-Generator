@@ -79,7 +79,7 @@ def generate_story(user_prompt):
     print("\nSending request to OpenRouter...")
 
     response = client.chat.completions.create(
-        model="meta-llama/llama-3.1-8b-instruct:free",
+        model="mistralai/mistral-7b-instruct:free",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
