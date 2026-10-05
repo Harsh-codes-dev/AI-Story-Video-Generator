@@ -360,3 +360,5 @@ if __name__ == "__main__":
 
         print("\nERROR:")
         print(e)
+        import sys
+        sys.exit(1)
