@@ -73,33 +73,46 @@ IMPORTANT:
 # GENERATE STORY
 # ============================================================
 
+MODELS_TO_TRY = [
+    "google/gemma-2-9b-it:free",
+    "meta-llama/llama-3-8b-instruct:free",
+    "huggingfaceh4/zephyr-7b-beta:free",
+    "openrouter/free"
+]
+
 def generate_story(user_prompt):
     system_prompt = build_system_prompt()
 
-    print("\nSending request to OpenRouter...")
+    for model_name in MODELS_TO_TRY:
+        for attempt in range(2): # 2 attempts per model
+            print(f"\nSending request to OpenRouter (Model: {model_name} | Attempt: {attempt+1})...")
+            
+            try:
+                response = client.chat.completions.create(
+                    model=model_name,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
+                    ],
+                    response_format={"type": "json_object"}
+                )
 
-    response = client.chat.completions.create(
-        model="openrouter/free",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt}
-        ],
-        response_format={"type": "json_object"}
-    )
+                story_text = response.choices[0].message.content
 
-    story_text = response.choices[0].message.content
+                if not story_text:
+                    print("LLM returned an empty response. Retrying...")
+                    continue
 
-    if not story_text:
-        raise RuntimeError("The LLM returned an empty response.")
-
-    try:
-        story = json.loads(story_text)
-    except json.JSONDecodeError as e:
-        print("\nLLM returned invalid JSON:")
-        print(story_text)
-        raise RuntimeError(f"Could not parse story JSON: {e}")
-
-    return story
+                story = json.loads(story_text)
+                
+                # Validate the story immediately before accepting it
+                validate_story(story)
+                return story
+                
+            except Exception as e:
+                print(f"Validation or API Error: {e}")
+                
+    raise RuntimeError("All models and retries failed to generate a valid story.")
 
 # ============================================================
 # VALIDATE STORY
@@ -152,7 +165,6 @@ if __name__ == "__main__":
     print("\nGenerating story...\n")
     try:
         story = generate_story(user_prompt)
-        validate_story(story)
 
         os.makedirs("output", exist_ok=True)
         with open(OUTPUT_FILE, "w") as f:
