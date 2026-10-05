@@ -53,8 +53,8 @@ def main():
         # Load the input image
         image = load_image(img_path)
         
-        # SVD performs best with 1024x576 resolution
-        image = image.resize((1024, 576)) 
+        # SVD will process this as a 9:16 vertical video
+        image = image.resize((576, 1024)) 
         
         # Generate video frames with higher quality parameters
         # decode_chunk_size=8 helps with VRAM usage on the DGX

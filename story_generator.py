@@ -28,14 +28,15 @@ IMPORTANT RULES:
 2. The narrator is N001. All other characters must use IDs like C001, C002, etc.
 3. Generate scenes suitable for 3D image generation.
 4. Every scene MUST contain an image_prompt.
-5. The "image_prompt" MUST always be in ENGLISH, even if the story is in another language (e.g. Hindi).
-6. The "image_prompt" MUST be highly concise (under 25 words) to avoid token truncation.
+5. The "image_prompt" MUST always be in ENGLISH.
+6. CHARACTER CONSISTENCY: Establish a highly specific visual description for each character (e.g., 'Rahul, a 30-year-old man with short black hair, wearing a red jacket'). You MUST include this EXACT visual description in every single scene's image_prompt where they appear.
 7. Return ONLY valid JSON.
 8. Do NOT return Markdown.
 9. Do NOT use ```json.
 10. Do NOT add explanations outside the JSON.
-11. The story MUST have a strong cinematic narrative arc with rich, engaging pacing.
-12. The "image_prompt" MUST explicitly include high-end rendering keywords like "Masterpiece, ultra-detailed 8k resolution, cinematic lighting, photorealistic".
+11. AVOID GLITCHES: To prevent AI video glitches, avoid generating prompts that require complex hand movements or intricate object holding. Keep character actions simple and cinematic.
+12. The story MUST have a strong cinematic narrative arc with rich, engaging pacing.
+13. The "image_prompt" MUST explicitly include high-end rendering keywords like "Masterpiece, ultra-detailed 8k resolution, cinematic lighting, photorealistic".
 
 OUTPUT FORMAT:
 
