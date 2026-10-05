@@ -25,13 +25,8 @@ def main():
     print("      AI STORY VIDEO GENERATOR - MASTER PIPELINE")
     print("=" * 60)
     
-    # 1. Check for OpenRouter API Key
-    if not os.environ.get("OPENROUTER_API_KEY"):
-        print("\nERROR: OPENROUTER_API_KEY environment variable is not set.")
-        print("Please set it before running the pipeline:")
-        print("Linux/Mac: export OPENROUTER_API_KEY=\"your_key\"")
-        print("Windows: set OPENROUTER_API_KEY=\"your_key\"")
-        sys.exit(1)
+    # 1. Set OpenRouter API Key
+    os.environ["OPENROUTER_API_KEY"] = "YOUR_API_KEY_HERE"
         
     # 2. Step 1: Generate Story (JSON)
     # This will ask the user for a prompt via input()
