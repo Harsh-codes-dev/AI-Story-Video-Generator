@@ -29,7 +29,7 @@ IMPORTANT RULES:
 3. Generate scenes suitable for 3D image generation.
 4. Every scene MUST contain an image_prompt.
 5. The "image_prompt" MUST always be in ENGLISH.
-6. CHARACTER CONSISTENCY: Establish a highly specific visual description for each character (e.g., 'Rahul, a 30-year-old man with short black hair, wearing a red jacket'). You MUST include this EXACT visual description in every single scene's image_prompt where they appear.
+6. The "image_prompt" MUST be highly concise (under 25 words) to avoid token truncation. Keep character descriptions brief.
 7. Return ONLY valid JSON.
 8. Do NOT return Markdown.
 9. Do NOT use ```json.

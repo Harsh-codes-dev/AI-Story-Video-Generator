@@ -96,7 +96,8 @@ Consistent character appearance, natural poses, dynamic angle, award-winning pho
         height=1024,
         width=576,
         num_inference_steps=20,
-        guidance_scale=0.0
+        guidance_scale=0.0,
+        max_sequence_length=77
     ).images[0]
 
     # Free up GPU memory aggressively after each generation
