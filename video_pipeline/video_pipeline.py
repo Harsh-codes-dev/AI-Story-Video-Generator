@@ -6,9 +6,10 @@ from diffusers import CogVideoXImageToVideoPipeline
 from diffusers.utils import load_image, export_to_video
 
 # Directories
-IMAGE_DIR = "output/images"
-VIDEO_DIR = "output/videos"
-STORY_FILE = "output/story.json"
+SESSION_DIR = os.environ.get("SESSION_DIR", "output")
+IMAGE_DIR = os.path.join(SESSION_DIR, "images")
+VIDEO_DIR = os.path.join(SESSION_DIR, "videos")
+STORY_FILE = os.path.join(SESSION_DIR, "story.json")
 
 # State of the art Image-to-Video model
 MODEL_ID = "THUDM/CogVideoX-5b-I2V"

@@ -2,9 +2,10 @@ import json
 import os
 import subprocess
 
-STORY_FILE = "output/story.json"
-AUDIO_DIR = "output/audio"
-OUTPUT_FILE = "output/final_story.wav"
+SESSION_DIR = os.environ.get("SESSION_DIR", "output")
+STORY_FILE = os.path.join(SESSION_DIR, "story.json")
+AUDIO_DIR = os.path.join(SESSION_DIR, "audio")
+OUTPUT_FILE = os.path.join(SESSION_DIR, "final_story.wav")
 
 FFMPEG = "/home/aiml/ffmpeg-7.0.2-amd64-static/ffmpeg"
 
@@ -71,7 +72,7 @@ if not audio_files:
 # CREATE CONCAT FILE FOR FFMPEG
 # ============================================================
 
-concat_file = "output/audio_concat.txt"
+concat_file = os.path.join(SESSION_DIR, "audio_concat.txt")
 
 with open(concat_file, "w") as f:
 

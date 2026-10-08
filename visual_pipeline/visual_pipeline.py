@@ -3,9 +3,10 @@ import os
 import torch
 from diffusers import FluxPipeline
 
-STORY_FILE = "output/story.json"
+SESSION_DIR = os.environ.get("SESSION_DIR", "output")
+STORY_FILE = os.path.join(SESSION_DIR, "story.json")
 CHARACTER_FILE = "characters/characters.json"
-OUTPUT_DIR = "output/images"
+OUTPUT_DIR = os.path.join(SESSION_DIR, "images")
 MODEL = "black-forest-labs/FLUX.1-schnell"
 
 

@@ -3,11 +3,12 @@ import os
 import subprocess
 import glob
 
-STORY_FILE = "output/story.json"
-AUDIO_DIR = "output/audio"
-VIDEO_DIR = "output/videos"
-OUTPUT_DIR = "output"
-FINAL_OUTPUT = "output/Final_Story.mp4"
+SESSION_DIR = os.environ.get("SESSION_DIR", "output")
+STORY_FILE = os.path.join(SESSION_DIR, "story.json")
+AUDIO_DIR = os.path.join(SESSION_DIR, "audio")
+VIDEO_DIR = os.path.join(SESSION_DIR, "videos")
+OUTPUT_DIR = SESSION_DIR
+FINAL_OUTPUT = os.path.join(SESSION_DIR, "Final_Story.mp4")
 
 # Using standard ffmpeg command
 FFMPEG = "ffmpeg"

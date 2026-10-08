@@ -3,8 +3,9 @@ import os
 import random
 from TTS.api import TTS
 
-STORY_FILE = "output/story.json"
-OUTPUT_DIR = "output/audio"
+SESSION_DIR = os.environ.get("SESSION_DIR", "output")
+STORY_FILE = os.path.join(SESSION_DIR, "story.json")
+OUTPUT_DIR = os.path.join(SESSION_DIR, "audio")
 
 print("\nLoading XTTS-v2...")
 tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to("cuda")
