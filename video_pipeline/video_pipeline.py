@@ -86,6 +86,8 @@ def main():
         frames = pipe(
             prompt=text_prompt,
             image=image,
+            height=720,                # Force Vertical (Portrait) Height
+            width=480,                 # Force Vertical (Portrait) Width
             num_video_frames=49,       # Generates a smooth 6-second video (49 frames at 8 fps)
             num_inference_steps=50,    # High step count for maximum cinematic quality
             guidance_scale=6.0,        # Strictly follow the text prompt + image
