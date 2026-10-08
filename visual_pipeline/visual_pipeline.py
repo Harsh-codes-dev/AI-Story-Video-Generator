@@ -5,7 +5,6 @@ from diffusers import FluxPipeline
 
 SESSION_DIR = os.environ.get("SESSION_DIR", "output")
 STORY_FILE = os.path.join(SESSION_DIR, "story.json")
-CHARACTER_FILE = "characters/characters.json"
 OUTPUT_DIR = os.path.join(SESSION_DIR, "images")
 MODEL = "black-forest-labs/FLUX.1-schnell"
 
