@@ -102,9 +102,8 @@ def main():
         # Format path for FFmpeg drawtext (replace \ with / for Windows compatibility)
         safe_text_path = os.path.abspath(text_file).replace('\\', '/')
         
-        # TikTok style: centered, bottom edge, white text with semi-transparent black background box
-        # y=h-text_h-50 pushes it exactly 50 pixels from the bottom of the video frame
-        text_filter = f"drawtext=textfile='{safe_text_path}':fontcolor=white:fontsize=42:box=1:boxcolor=black@0.6:boxborderw=15:x=(w-text_w)/2:y=h-text_h-50:text_align=C"
+        # TikTok style 1080p: upscale video to 1080x1920 first, then apply high-res centered text
+        text_filter = f"scale=1080:1920,drawtext=textfile='{safe_text_path}':fontcolor=white:fontsize=80:box=1:boxcolor=black@0.6:boxborderw=25:x=(w-text_w)/2:y=h-text_h-120:text_align=C"
 
         # -stream_loop -1 loops video infinitely. -shortest stops encoding when audio ends.
         run_ffmpeg([
