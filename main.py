@@ -82,16 +82,16 @@ def main():
     # 3. Step 2: Generate Visuals (FLUX)
     run_script(os.path.join("visual_pipeline", "visual_pipeline.py"))
     
-    # 3.5 Step 2.5: Animate Visuals (Stable Video Diffusion)
+    # 3.5 Step 2.5: Animate Visuals (Stable Video Diffusion / CogVideoX)
     run_script(os.path.join("video_pipeline", "video_pipeline.py"))
     
     # 4. Step 3: Generate Voices (XTTS-v2)
     run_script("story_audio.py")
+
+    # 4.5 Step 3.5: Generate Background Music & SFX (AudioLDM2)
+    run_script("music_pipeline.py")
     
-    # 5. Step 4: Combine Audio (FFmpeg)
-    run_script("combine_audio.py")
-    
-    # 6. Step 5: Final Video Assembly (FFmpeg)
+    # 5. Step 4: Final Video Assembly (FFmpeg)
     run_script("video_assembler.py")
     
         print("\n" + "=" * 60)

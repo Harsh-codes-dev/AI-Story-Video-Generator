@@ -61,7 +61,9 @@ OUTPUT FORMAT:
                     "text": "Dialogue text."
                 }}
             ],
-            "image_prompt": "Detailed 3D cinematic scene description."
+            "image_prompt": "Detailed 3D cinematic scene description.",
+            "music_prompt": "Ambient cinematic background music description.",
+            "sfx_prompt": "Specific sound effect (e.g., wind blowing, footsteps)."
         }}
     ]
 }}

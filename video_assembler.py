@@ -2,11 +2,13 @@ import json
 import os
 import subprocess
 import glob
+import textwrap
 
 SESSION_DIR = os.environ.get("SESSION_DIR", "output")
 STORY_FILE = os.path.join(SESSION_DIR, "story.json")
 AUDIO_DIR = os.path.join(SESSION_DIR, "audio")
 VIDEO_DIR = os.path.join(SESSION_DIR, "videos")
+MUSIC_DIR = os.path.join(SESSION_DIR, "music")
 OUTPUT_DIR = SESSION_DIR
 FINAL_OUTPUT = os.path.join(SESSION_DIR, "Final_Story.mp4")
 
@@ -23,6 +25,7 @@ def run_ffmpeg(command):
 def main():
     print("===================================")
     print("      KRINJAL VIDEO ASSEMBLER      ")
+    print("      (With Subtitles & BGM)       ")
     print("===================================")
 
     if not os.path.exists(STORY_FILE):
@@ -44,33 +47,70 @@ def main():
 
         print(f"\n--- Assembling Scene {scene_id} ---")
         
-        # 1. Gather all audio for this scene
+        # 1. Gather all voice audio for this scene
         scene_audio_files = sorted(glob.glob(os.path.join(AUDIO_DIR, f"scene_{scene_id:02d}_*.wav")))
-        
         if not scene_audio_files:
-            print(f"No audio found for scene {scene_id}. Using video only.")
-            final_clips.append(scene_video)
+            print(f"No audio found for scene {scene_id}. Skipping.")
             continue
 
         scene_audio_concat = os.path.join(AUDIO_DIR, f"scene_{scene_id:02d}_merged.wav")
+        mixed_audio = os.path.join(AUDIO_DIR, f"scene_{scene_id:02d}_final_mixed.wav")
         scene_final_vid = os.path.join(VIDEO_DIR, f"scene_{scene_id:03d}_final.mp4")
 
-        # 2. Merge all audio for the scene into one WAV
+        # 2. Merge all voice parts into one WAV
         concat_txt = os.path.join(AUDIO_DIR, f"scene_{scene_id:02d}_concat.txt")
         with open(concat_txt, "w") as f:
             for audio in scene_audio_files:
                 f.write(f"file '{os.path.abspath(audio)}'\n")
         
-        print("Merging audio segments...")
+        print("Merging voice segments...")
         run_ffmpeg([FFMPEG, "-y", "-f", "concat", "-safe", "0", "-i", concat_txt, "-c", "copy", scene_audio_concat])
 
-        # 3. Combine Video and Audio (Looping the video to match audio length)
-        print("Syncing video to audio length...")
-        # -stream_loop -1 loops the video infinitely. -shortest stops encoding when the shortest stream (audio) ends.
+        # 3. Mix Voice with Background Music
+        bgm_file = os.path.join(MUSIC_DIR, f"scene_{scene_id:03d}_bgm.wav")
+        final_scene_audio = scene_audio_concat
+        
+        if os.path.exists(bgm_file):
+            print("Mixing voice with atmospheric background music...")
+            # amix lowers the BGM volume to 0.3 so the voice remains clear
+            run_ffmpeg([
+                FFMPEG, "-y",
+                "-i", scene_audio_concat,
+                "-i", bgm_file,
+                "-filter_complex", "[0:a]volume=1.0[v];[1:a]volume=0.3[m];[v][m]amix=inputs=2:duration=first:dropout_transition=2",
+                mixed_audio
+            ])
+            final_scene_audio = mixed_audio
+
+        # 4. Generate Subtitles Text File
+        scene_text_parts = []
+        if scene.get("narration"):
+            scene_text_parts.append(scene["narration"])
+        for dialogue in scene.get("dialogue", []):
+            scene_text_parts.append(dialogue["text"])
+            
+        scene_text = " ".join(scene_text_parts)
+        wrapped_text = textwrap.fill(scene_text, width=30)
+        
+        text_file = os.path.join(OUTPUT_DIR, f"scene_{scene_id:03d}_subtitles.txt")
+        with open(text_file, "w", encoding="utf-8") as f:
+            f.write(wrapped_text)
+
+        # 5. Combine Video, Audio, and Burn Subtitles
+        print("Applying TikTok subtitles and syncing video...")
+        
+        # Format path for FFmpeg drawtext (replace \ with / for Windows compatibility)
+        safe_text_path = os.path.abspath(text_file).replace('\\', '/')
+        
+        # TikTok style: centered, bottom third, white text with semi-transparent black background box
+        text_filter = f"drawtext=textfile='{safe_text_path}':fontcolor=white:fontsize=42:box=1:boxcolor=black@0.6:boxborderw=15:x=(w-text_w)/2:y=(h-text_h)-200:text_align=C"
+
+        # -stream_loop -1 loops video infinitely. -shortest stops encoding when audio ends.
         run_ffmpeg([
             FFMPEG, "-y", 
             "-stream_loop", "-1", "-i", scene_video, 
-            "-i", scene_audio_concat, 
+            "-i", final_scene_audio,
+            "-vf", text_filter,
             "-c:v", "libx264", "-c:a", "aac", 
             "-shortest", "-pix_fmt", "yuv420p", 
             scene_final_vid
@@ -83,7 +123,7 @@ def main():
         print("No clips to assemble!")
         return
 
-    # 4. Concatenate all final scene clips into the Final Movie
+    # 6. Concatenate all final scene clips into the Final Movie
     print("\n===================================")
     print("STITCHING FINAL MOVIE...")
     
